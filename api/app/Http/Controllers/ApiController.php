@@ -6,18 +6,30 @@ use Illuminate\Http\Request;
 use Datetime;
 use App\Task;
 use App\TaskFull;
+use Illuminate\Support\Facades\Cache;
 
 class ApiController extends Controller
 {
     public function index() {
-        //генерация задач
+        //генерация задач и их кэширование
+        $taskList = array();
+        if (!Cache::has('tasks')) {
+            $taskList = self::generateTasks();
+            Cache::add('tasks', $taskList, 1); //кэширование на час
+        } else {
+            $taskList = Cache::get('tasks');
+        }
+        return json_encode($taskList, JSON_UNESCAPED_UNICODE);
+    }
+
+    public static function generateTasks() {
         $taskList = array();
         $date = new DateTime();
         for ($i = 1; $i<=1000; $i++) {
             $date->modify('+1 hour');
             $taskList[] = new Task($i, 'Задача '.$i, $date->format('d.m.Y H:i:s'));
         }
-        return json_encode($taskList, JSON_UNESCAPED_UNICODE);
+        return $taskList;
     }
 
     //задание 2
