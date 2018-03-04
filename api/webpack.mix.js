@@ -13,3 +13,21 @@ let mix = require('laravel-mix');
 
 mix.react('resources/assets/js/app.js', 'public/js')
    .sass('resources/assets/sass/app.scss', 'public/css');
+
+   mix.webpackConfig(webpack => {
+        return {
+                devtool: 'cheap-source-map',
+                plugins: [
+                new webpack.optimize.UglifyJsPlugin({
+                    compressor: {
+                    warnings: false
+                    }
+                }),
+                new webpack.DefinePlugin({
+                    'process.env': {
+                      'NODE_ENV': JSON.stringify('production')
+                    },
+                  })
+                ],
+            }
+        });

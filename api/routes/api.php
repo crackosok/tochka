@@ -19,4 +19,4 @@ use App\Http\Controllers\ApiController;
 });*/
 
 Route::get('/v1/task', 'ApiController@Index');
-Route::get('v1/task/{id}', 'ApiController@taskInfo');
+Route::get('/v1/task/{id}', 'ApiController@taskInfo');
